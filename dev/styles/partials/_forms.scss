@@ -1,0 +1,44 @@
+form {
+
+    label {
+        margin: 10px;
+    }
+
+    input,
+    select {
+        padding: 15px;
+        margin: 10px;
+        outline: none;
+        border-radius: 5px;
+        border: 2px solid black;
+        font-style: italic;
+        color: $inputFontColour;
+    }
+
+    .dropdown {
+        display: inline-block;
+        position: relative;
+
+        select {
+            -moz-appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .fa-chevron-down {
+            position: absolute;
+            z-index: 2;
+            left: 125px;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    button {
+        background-color: $btnColour;
+        padding: 15px 25px;
+        border-radius: 5px;
+        border: 2px solid black;
+    }
+}
