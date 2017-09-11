@@ -6,15 +6,23 @@ table {
 
     td,
     th {
-        padding: 10px 70px;
+        padding: 10px 60px;
         border: 2px solid black;
+        text-align: left;
     }
 
     th,
     tfoot td {
         font-family: $headingFont;
-        text-align: right;  
         font-size: 1.5rem;
         font-weight: bold;
+    }
+
+    tfoot td {
+        text-align: right;
+    }
+
+    tfoot span {
+        color: $totalExpColour;
     }
 }

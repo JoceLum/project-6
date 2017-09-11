@@ -2,30 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Header from './Header';
 import  { toMoney } from './utilities'
+import swal from 'sweetalert2'
 import firebase from './firebase';
 const dbRef = firebase.database().ref('/items');
 
-//form to enter budget
-class FormOne extends React.Component {
-render() {
-        return (
-            <section className="budget-section">
-                <form onSubmit={this.props.handleSubmit}>
-                    <label htmlFor="budget">What is your budget for this trip?</label>
-                    <input type="text" name="budget" placeholder="in CDN $" onChange={this.props.handleChange} value={this.props.budget}/>
-                    <button className="submit-btn">Submit</button>
-                </form>
-            </section>
-        );
-    }
-}
-
 //form to enter in individual expenses
-class FormTwo extends React.Component {
+class Form extends React.Component {
     render() {
         return (
+    <div className="form-section">     
+        <section className="budget-section">
+            <form onSubmit={this.props.handleSubmit}>
+                <label htmlFor="budget">What is your budget for this trip?</label>
+                <input type="text" name="budget" placeholder="$" onChange={this.props.handleChange} value={this.props.budget}/>
+            </form>
+        </section>    
         <section className="addExpense">
-            <p>So, what did you just spend $ on?</p>
+            <p>So, what did you just buy?</p>
             <form onSubmit={this.props.handleSubmit}> 
                <div className="dropdown"> 
                 <select onChange={this.props.handleChange} value={this.props.category} name="category">
@@ -43,6 +36,7 @@ class FormTwo extends React.Component {
                 <button className="add-btn">Add</button>
             </form> 
         </section>
+    </div>
         )
     }
 }
@@ -55,6 +49,7 @@ constructor() {
             category: '',
             desc: '',
             cost: '',
+            totalCost: '',
             items: [],
         };
         this.handleChange = this.handleChange.bind(this);
@@ -65,15 +60,34 @@ constructor() {
         event.preventDefault();
         let costItem = toMoney(this.state.cost);
         //check to see if inputs are actually filled in
-        if (this.state.desc === '' || this.state.cost === '') {
-            alert('please add something!');
+        if (this.state.budget === '') {
+            swal({
+              title: 'Error!',
+              text: 'Please enter a budget!',
+              type: 'error',
+              confirmButtonText: 'Cool'
+            })
+        }
+        else if (this.state.desc === '' || this.state.cost === '') {
+            swal({
+              title: 'Error!',
+              text: 'Please add an expense item!',
+              type: 'error',
+              confirmButtonText: 'Cool'
+            })
         }  else {
+
         const newItem = {
+            budget: (this.state.budget) - (costItem),
             category: this.state.category,
             desc: this.state.desc,
             cost: costItem,
-        };
+            }
         dbRef.push(newItem);
+        console.log(newItem);
+        this.state.category ='';
+        this.state.cost = '';
+        this.state.desc = '';
         }
     }
 
@@ -102,17 +116,13 @@ componentDidMount() {
       return (
        <div className="app wrapper"> 
         <Header />
-        <FormOne
-        handleChange={this.handleChange}
-        handleSubmit={this.handleSubmit}
-        budget={this.state.budget}
-        />
-        <FormTwo
+        <Form
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
         category={this.state.category}
         desc={this.state.desc}
         cost={this.state.cost}
+        budget={this.state.budget}
          />
         <section className="expenseList">
             <table>
@@ -134,7 +144,13 @@ componentDidMount() {
         	  </tbody>
               <tfoot>
                 <tr>
-                   <td colSpan={3}><strong>Budget:</strong> ${this.state.budget}</td> 
+                   <td colSpan={3}>Total Expenses: 
+                   <span> ${this.state.items.reduce((acc,curr) => {
+                        return acc += curr.cost;
+                   },0)}</span></td> 
+                </tr>
+                <tr>
+                   <td colSpan={3}>Budget: </td> 
                 </tr>
               </tfoot>
         	</table>
