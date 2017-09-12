@@ -4,8 +4,8 @@ import Header from './Header';
 import  { toMoney } from './utilities'
 import swal from 'sweetalert2'
 import firebase from './firebase';
-const dbRef = firebase.database().ref('/items');
-
+const itemRef = firebase.database().ref('/items');
+const budgetRef = firebase.database().ref('/budget');
 //form to enter in individual expenses
 class Form extends React.Component {
     render() {
@@ -17,7 +17,7 @@ class Form extends React.Component {
                 <input type="text" name="budget" placeholder="$" onChange={this.props.handleChange} value={this.props.budget}/>
             </form>
         </section>    
-        <section className="addExpense">
+        <section className="expenses-section">
             <p>So, what did you just buy?</p>
             <form onSubmit={this.props.handleSubmit}> 
                <div className="dropdown"> 
@@ -76,18 +76,22 @@ constructor() {
               confirmButtonText: 'Cool'
             })
         }  else {
-
-        const newItem = {
-            budget: (this.state.budget) - (costItem),
-            category: this.state.category,
-            desc: this.state.desc,
-            cost: costItem,
+            const budgetAmt = {
+                budget: this.state.budget
             }
-        dbRef.push(newItem);
-        console.log(newItem);
-        this.state.category ='';
-        this.state.cost = '';
-        this.state.desc = '';
+            const newItem = {
+                category: this.state.category,
+                desc: this.state.desc,
+                cost: costItem,
+                }
+            itemRef.push(newItem);
+            budgetRef.set({value: budgetAmt});
+            console.log(newItem);
+
+            this.setState({
+                    cost:'', 
+                    desc: '',
+                });
         }
     }
 
@@ -99,7 +103,7 @@ constructor() {
 
 componentDidMount() {
     //to retrieve data from Firebase:
-    dbRef.on('value',(snapshot) => {
+    itemRef.on('value',(snapshot) => {
         const newItemsArray = [];
         const firebaseItems = snapshot.val();
         for (let key in firebaseItems) { 
@@ -107,9 +111,22 @@ componentDidMount() {
                 firebaseItem.id = key;
             newItemsArray.push(firebaseItem);
         }
+        let totalExpenses = newItemsArray.reduce((acc,curr) => {
+            return acc += curr.cost;
+        },0);
+
         this.setState({
             items: newItemsArray,
+            totalExpenses: totalExpenses,
+            // leftOverBudget: this.state.budget - totalExpenses
         });
+    });
+
+    budgetRef.on('value', (snapshot) => {
+        const firebaseBudget = snapshot.val();
+        this.setState({
+            leftOverBudget: firebaseBudget.value
+        })
     });
 }
     render() {
@@ -145,12 +162,10 @@ componentDidMount() {
               <tfoot>
                 <tr>
                    <td colSpan={3}>Total Expenses: 
-                   <span> ${this.state.items.reduce((acc,curr) => {
-                        return acc += curr.cost;
-                   },0)}</span></td> 
+                   <span> ${this.state.totalExpenses}</span></td> 
                 </tr>
                 <tr>
-                   <td colSpan={3}>Budget: </td> 
+                   <td colSpan={3}><strong>Budget: </strong></td> 
                 </tr>
               </tfoot>
         	</table>
