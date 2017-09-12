@@ -1,11 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Header from './Header';
 import  { toMoney } from './utilities'
 import swal from 'sweetalert2'
-import firebase from './firebase';
-
+import firebase, { auth, provider } from './firebase.js';
 const userRef = firebase.database().ref('/user');
+
+
+//header
+const Header = () => {
+    return (
+        <header>
+            <div className="wrapper">
+                <h1>Globetrotter On a Budget</h1>
+            </div>
+        </header>  
+    )
+}
+
 //form to enter in individual expenses
 class Form extends React.Component {
     render() {
@@ -52,10 +63,16 @@ constructor() {
             totalExpenses: 0,
             leftOverBudget: 0,
             items: [],
+            user: null
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 }    
+
+    removeItem(key) {
+        const itemRef = firebase.database().ref(`user/items/${key}`);
+        itemRef.remove();  
+    }
     
     handleSubmit(event) {
         event.preventDefault();
@@ -156,7 +173,8 @@ componentDidMount() {
                 return (<tr key={item.id}>
                         <td>{item.category}</td>
                         <td>{item.desc}</td>
-                        <td>${item.cost.toFixed(2)}</td>
+                        <td>${item.cost.toFixed(2)} <button className="remove-btn" onClick={() => this.removeItem(item.id)}>x</button>
+                        </td>
                     </tr>);
                     })}
         	  </tbody>

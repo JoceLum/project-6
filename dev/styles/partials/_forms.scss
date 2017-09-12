@@ -20,7 +20,7 @@ select {
     margin: 10px;
     outline: none;
     border-radius: 5px;
-    border: 2px solid black;
+    border: 1px solid black;
     font-style: italic;
     color: $inputFontColour;
 }
@@ -47,8 +47,9 @@ select {
 }
 
 button {
-    background-color: $yellow;
+    background-color: $tanColour;
     padding: 15px 25px;
     border-radius: 5px;
-    border: 2px solid black;
+    border: 1px solid black;
+    text-transform: uppercase;
 }
