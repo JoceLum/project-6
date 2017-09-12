@@ -2,20 +2,20 @@ table {
     margin: 50px auto;
     text-align: left;
     border: 1px solid black;
-    background-color: $tableBgColour;
+    background-color: $yellow;
 
     td,
     th {
-        padding: 10px 60px;
+        padding: 20px 80px;
         border: 2px solid black;
         text-align: left;
     }
 
     th,
     tfoot td {
-        font-family: $headingFont;
+        font-family: $bodyFont;
+        text-transform: uppercase;
         font-size: 1.5rem;
-        font-weight: bold;
     }
 
     tfoot td {

@@ -1,8 +1,7 @@
 body {
     font-family: $bodyFont;
-    background-color: $bgColour;
-    // background-image: url(/assets/travel_wallpaper.jpg);
-    // background-size: cover;
+    background-image: url(/assets/travel_bg.jpg);
+    background-size: cover;
 }
 
 h1,
@@ -12,8 +11,14 @@ p {
 }
 
 h1 {
-    font-family: $headingFont;
-    font-size: 4rem;
+    font-family: $bodyFont;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-size: 5rem;
+    display: block;
+    padding: 50px;
+    color: white;
+    background-color: $bgColour;
 }
 
 .wrapper {
@@ -25,8 +30,4 @@ h1 {
     justify-content: center;
     align-items: center;
     min-height: 50vh;
-}
-
-.suitcase {
-    width: 200px;
 }

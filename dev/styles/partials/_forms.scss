@@ -1,44 +1,54 @@
-form {
+.form-section {
+    background-color: $bgColour;
+    padding: 80px;
+}
 
-    label {
-        margin: 10px;
-    }
+label {
+    margin: 10px;
+    display: block;
+}
 
-    input,
+label,
+p {
+    color: white;
+    font-size: 1.5rem;
+}
+
+input,
+select {
+    padding: 15px;
+    margin: 10px;
+    outline: none;
+    border-radius: 5px;
+    border: 2px solid black;
+    font-style: italic;
+    color: $inputFontColour;
+}
+
+.dropdown {
+    display: inline-block;
+    position: relative;
+
     select {
-        padding: 15px;
-        margin: 10px;
-        outline: none;
-        border-radius: 5px;
-        border: 2px solid black;
-        font-style: italic;
-        color: $inputFontColour;
+        -moz-appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        width: 180px;
     }
 
-    .dropdown {
-        display: inline-block;
-        position: relative;
-
-        select {
-            -moz-appearance: none;
-            -moz-appearance: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .fa-chevron-down {
-            position: absolute;
-            z-index: 2;
-            left: 125px;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
+    .fa-chevron-down {
+        position: absolute;
+        z-index: 2;
+        left: 165px;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
+}
 
-    button {
-        background-color: $btnColour;
-        padding: 15px 25px;
-        border-radius: 5px;
-        border: 2px solid black;
-    }
+button {
+    background-color: $yellow;
+    padding: 15px 25px;
+    border-radius: 5px;
+    border: 2px solid black;
 }

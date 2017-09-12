@@ -4,8 +4,8 @@ import Header from './Header';
 import  { toMoney } from './utilities'
 import swal from 'sweetalert2'
 import firebase from './firebase';
-const itemRef = firebase.database().ref('/items');
-const budgetRef = firebase.database().ref('/budget');
+
+const userRef = firebase.database().ref('/user');
 //form to enter in individual expenses
 class Form extends React.Component {
     render() {
@@ -49,7 +49,8 @@ constructor() {
             category: '',
             desc: '',
             cost: '',
-            totalCost: '',
+            totalExpenses: 0,
+            leftOverBudget: 0,
             items: [],
         };
         this.handleChange = this.handleChange.bind(this);
@@ -68,29 +69,32 @@ constructor() {
               confirmButtonText: 'Cool'
             })
         }
-        else if (this.state.desc === '' || this.state.cost === '') {
+        else if (this.state.category === '' || this.state.desc === '' || this.state.cost === '') {
             swal({
               title: 'Error!',
-              text: 'Please add an expense item!',
+              text: 'Please fill in all fields!',
               type: 'error',
               confirmButtonText: 'Cool'
             })
         }  else {
-            const budgetAmt = {
-                budget: this.state.budget
-            }
-            const newItem = {
+            
+            var items = this.state.items.slice(0);
+              
+            items.push({
                 category: this.state.category,
                 desc: this.state.desc,
                 cost: costItem,
-                }
-            itemRef.push(newItem);
-            budgetRef.set({value: budgetAmt});
-            console.log(newItem);
+                });
 
+            userRef.set({
+                budget: toMoney(this.state.budget),
+                items: items
+            });
+            //resets form input values
             this.setState({
                     cost:'', 
                     desc: '',
+                    category: ''
                 });
         }
     }
@@ -103,30 +107,27 @@ constructor() {
 
 componentDidMount() {
     //to retrieve data from Firebase:
-    itemRef.on('value',(snapshot) => {
+    userRef.on('value',(snapshot) => {
         const newItemsArray = [];
-        const firebaseItems = snapshot.val();
-        for (let key in firebaseItems) { 
-            const firebaseItem = firebaseItems[key];
-                firebaseItem.id = key;
-            newItemsArray.push(firebaseItem);
+        const user = snapshot.val();
+        if (user != null) {
+            for (let key in user.items) { 
+                var item = user.items[key];
+                    item.id = key;
+                newItemsArray.push(item);
+            }
+            //sums up all expenses as new entries are added
+            let totalExpenses = newItemsArray.reduce((acc,curr) => {
+                return acc += curr.cost;
+            },0);
+            
+            this.setState({
+                items: newItemsArray,
+                budget: user.budget,
+                totalExpenses: totalExpenses,
+                leftOverBudget: user.budget - totalExpenses
+            });
         }
-        let totalExpenses = newItemsArray.reduce((acc,curr) => {
-            return acc += curr.cost;
-        },0);
-
-        this.setState({
-            items: newItemsArray,
-            totalExpenses: totalExpenses,
-            // leftOverBudget: this.state.budget - totalExpenses
-        });
-    });
-
-    budgetRef.on('value', (snapshot) => {
-        const firebaseBudget = snapshot.val();
-        this.setState({
-            leftOverBudget: firebaseBudget.value
-        })
     });
 }
     render() {
@@ -155,17 +156,17 @@ componentDidMount() {
                 return (<tr key={item.id}>
                         <td>{item.category}</td>
                         <td>{item.desc}</td>
-                        <td>${item.cost}</td>
+                        <td>${item.cost.toFixed(2)}</td>
                     </tr>);
                     })}
         	  </tbody>
               <tfoot>
                 <tr>
                    <td colSpan={3}>Total Expenses: 
-                   <span> ${this.state.totalExpenses}</span></td> 
+                   <span> ${this.state.totalExpenses.toFixed(2)}</span></td> 
                 </tr>
                 <tr>
-                   <td colSpan={3}><strong>Budget: </strong></td> 
+                   <td colSpan={3}>Left to Spend: <span>${this.state.leftOverBudget.toFixed(2)}</span></td> 
                 </tr>
               </tfoot>
         	</table>
