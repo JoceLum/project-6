@@ -8,7 +8,7 @@ table {
     th {
         padding: 15px 78px;
         color: $tableFontColour;
-        border: 1px solid black;
+        border: 1px solid grey;
         text-align: left;
         text-transform: uppercase;
         @include respond-to('large') {
@@ -72,6 +72,7 @@ table {
         color: #7A7C7D;
         background-color: transparent;
         border: 1px solid #7A7C7D;
+        border-radius: 50%;
         &:hover {
         color: #353536;
         border: 1px solid #353536;      

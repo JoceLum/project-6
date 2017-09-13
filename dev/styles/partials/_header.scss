@@ -1,7 +1,7 @@
 .title {
     background-color: $bgColour;
     padding: 10px 160px;
-    border: 4px double #000;
+    border: 5px double #000;
     @include respond-to('small') {
         padding: 10px 55px;
     }
