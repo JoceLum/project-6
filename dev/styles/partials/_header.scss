@@ -1,0 +1,32 @@
+.title {
+    background-color: $bgColour;
+    padding: 10px 100px;
+    border: 4px double #000;
+    @include respond-to('small') {
+        padding: 10px 55px;
+    }
+
+    h1 {
+        font-family: $primaryFont; 
+        text-transform: uppercase;
+        text-shadow: 1px 2px 1px #000;
+        letter-spacing: 5px;
+        font-size: 5rem;
+        margin-bottom: 5px;
+        color: #fff;
+        @include respond-to('large') {
+            font-size: 4rem;
+        }
+    }
+}
+
+.log {
+    align-self: flex-end;
+    margin: 20px 0 50px 0;
+    &:hover {
+        background-color: $btnHoverColour;
+    }
+    @include respond-to('large') {
+        margin: 20px 40px 50px 0;
+    }
+}

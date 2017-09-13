@@ -1,10 +1,12 @@
 //FONTS
-$headingFont:'Abril Fatface', cursive;
-$bodyFont: 'Montserrat', sans-serif;
+$primaryFont: 'Montserrat', sans-serif;
 
 //COLOURS
 $bgColour: rgba(77, 77, 77, 0.5);
-$tanColour: #DECBB8; 
+$btnColour: rgba(232, 178, 76, 0.9);
+$btnHoverColour: rgba(204, 157, 67, 0.9);
+$tanColour: rgba(222, 203, 184, 0.9); 
+$darkTanColour: rgba(194, 177, 161, 0.5);
 $inputFontColour: #666869;
-$tableBgColour: #AFD6E3;
+$tableFontColour: #3F4040;
 $totalExpColour: #E65776;

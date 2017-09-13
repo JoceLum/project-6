@@ -1,6 +1,12 @@
 .form-section {
     background-color: $bgColour;
-    padding: 80px;
+    padding: 70px;
+    @include respond-to('large') {
+        padding: 70px 10px;
+    }
+    @include respond-to('small') {
+        padding: 20px 20px;
+    }
 }
 
 label {
@@ -12,6 +18,9 @@ label,
 p {
     color: white;
     font-size: 1.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 1px #000;
 }
 
 input,
@@ -47,9 +56,13 @@ select {
 }
 
 button {
-    background-color: $tanColour;
+    background-color: $btnColour;
     padding: 15px 25px;
     border-radius: 5px;
     border: 1px solid black;
     text-transform: uppercase;
+    outline: none;
+    &:hover {
+        background-color: $btnHoverColour;
+    }
 }

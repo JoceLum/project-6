@@ -1,27 +1,50 @@
 table {
     margin: 50px auto;
     text-align: left;
-    border: 1px solid black;
+    border: 1px solid #000;
     background-color: $tanColour;
 
     td,
     th {
-        padding: 20px 80px;
+        padding: 15px 80px;
+        color: $tableFontColour;
         border: 1px solid black;
         text-align: left;
         text-transform: uppercase;
+        @include respond-to('large') {
+            padding: 10px 65px;
         }
+        @include respond-to('medium') {
+            padding: 10px 50px;
+        }
+        @include respond-to('small') {
+            padding: 10px 30px;
+        }
+    }   
 
     th,
     tfoot td {
-        font-family: $bodyFont;
+        font-family: $primaryFont;
         text-transform: uppercase;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        @include respond-to('large') {
+            font-size: 1rem;
+        }
     }
 
     tfoot td {
         text-align: right;
-        font-size: 1.2rem;
+        padding-right: 20px;
+        font-weight: bold;
+    }
+
+    th {
+        background-color: $darkTanColour;
+    }
+
+    td:nth-child(3) {
+        padding-right: 20px;
     }
 
     tfoot span {
@@ -30,5 +53,13 @@ table {
 
     .remove-btn {   
         padding: 0 5px;
+        float: right;
+        color: #7A7C7D;
+        background-color: transparent;
+        border: 1px solid #7A7C7D;
+        &:hover {
+        color: #353536;
+        border: 1px solid #353536;      
+        }
     }
 }

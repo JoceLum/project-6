@@ -5,23 +5,25 @@ import swal from 'sweetalert2'
 import firebase, { auth, provider } from './firebase.js';
 const userRef = firebase.database().ref('/user');
 
-
 //header
 const Header = () => {
     return (
         <header>
             <div className="wrapper">
-                <h1>Globetrotter On a Budget</h1>
+                <div className="title">
+                    <h1>Travelogged</h1>
+                    <p>Budget App for Practical Nomads</p>
+                </div>
             </div>
         </header>  
     )
-}
+}   
 
 //form to enter in individual expenses
 class Form extends React.Component {
     render() {
         return (
-    <div className="form-section">     
+    <div className="form-section wrapper">     
         <section className="budget-section">
             <form onSubmit={this.props.handleSubmit}>
                 <label htmlFor="budget">What is your budget for this trip?</label>
@@ -67,62 +69,88 @@ constructor() {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-}    
-
-    removeItem(key) {
-        const itemRef = firebase.database().ref(`user/items/${key}`);
-        itemRef.remove();  
-    }
-    
-    handleSubmit(event) {
-        event.preventDefault();
-        let costItem = toMoney(this.state.cost);
-        //check to see if inputs are actually filled in
-        if (this.state.budget === '') {
-            swal({
-              title: 'Error!',
-              text: 'Please enter a budget!',
-              type: 'error',
-              confirmButtonText: 'Cool'
-            })
-        }
-        else if (this.state.category === '' || this.state.desc === '' || this.state.cost === '') {
-            swal({
-              title: 'Error!',
-              text: 'Please fill in all fields!',
-              type: 'error',
-              confirmButtonText: 'Cool'
-            })
-        }  else {
-            
-            var items = this.state.items.slice(0);
-              
-            items.push({
-                category: this.state.category,
-                desc: this.state.desc,
-                cost: costItem,
-                });
-
-            userRef.set({
-                budget: toMoney(this.state.budget),
-                items: items
-            });
-            //resets form input values
-            this.setState({
-                    cost:'', 
-                    desc: '',
-                    category: ''
-                });
-        }
-    }
-
-    handleChange(event) {
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this); 
+}
+login() {
+    auth.signInWithPopup(provider)
+    .then((result) => {
         this.setState({
-            [event.target.name]: event.target.value,
-        });
+            user: result.user,
+        })
+    });
+}
+logout() {
+    auth.signOut()
+    .then(() => {
+        this.setState({
+            user: null,
+        })
+    });
+}
+
+
+removeItem(key) {
+    const itemRef = firebase.database().ref(`user/items/${key}`);
+    itemRef.remove()
+}
+
+handleSubmit(event) {
+    event.preventDefault();
+    let costItem = toMoney(this.state.cost);
+    //check to see if inputs are actually filled in
+    if (this.state.budget === '') {
+        swal({
+          title: 'Error!',
+          text: 'Please enter a budget!',
+          type: 'error',
+          confirmButtonText: 'Cool'
+        })
     }
+    else if (this.state.category === '' || this.state.desc === '' || this.state.cost === '') {
+        swal({
+          title: 'Error!',
+          text: 'Please fill in all fields!',
+          type: 'error',
+          confirmButtonText: 'Cool'
+        })
+    }  else {
+        
+        var items = this.state.items.slice(0);
+          
+        items.push({
+            category: this.state.category,
+            desc: this.state.desc,
+            cost: costItem,
+            });
+
+        userRef.set({
+            budget: toMoney(this.state.budget),
+            items: items
+        });
+        //resets form input values
+        this.setState({
+                cost:'', 
+                desc: '',
+                category: ''
+            });
+        }
+}
+
+handleChange(event) {
+    this.setState({
+        [event.target.name]: event.target.value,
+    });
+}
 
 componentDidMount() {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({
+            user: user,
+        });
+      } 
+    });
     //to retrieve data from Firebase:
     userRef.on('value',(snapshot) => {
         const newItemsArray = [];
@@ -150,7 +178,23 @@ componentDidMount() {
     render() {
       return (
        <div className="app wrapper"> 
+       {this.state.user ?
+         <button className="log" onClick={this.logout}>Log Out</button>                
+         :
+         <button className="log" onClick={this.login}>Log In</button>  
+        }
         <Header />
+        {this.state.user ?
+            <div>
+              <div className='user-profile'>
+                <img src={this.state.user.photoURL} />
+              </div>
+            </div>
+            :
+            <div className='wrapper'>
+              <p>You must be logged in to see the trip expenses list and add to it.</p>
+            </div>
+          }
         <Form
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
@@ -173,15 +217,14 @@ componentDidMount() {
                 return (<tr key={item.id}>
                         <td>{item.category}</td>
                         <td>{item.desc}</td>
-                        <td>${item.cost.toFixed(2)} <button className="remove-btn" onClick={() => this.removeItem(item.id)}>x</button>
-                        </td>
+                        <td>${item.cost.toFixed(2)} <button className="remove-btn" onClick={() => this.removeItem(item.id)}>x</button></td>
                     </tr>);
                     })}
         	  </tbody>
               <tfoot>
                 <tr>
                    <td colSpan={3}>Total Expenses: 
-                   <span> ${this.state.totalExpenses.toFixed(2)}</span></td> 
+                    ${this.state.totalExpenses.toFixed(2)}</td> 
                 </tr>
                 <tr>
                    <td colSpan={3}>Left to Spend: <span>${this.state.leftOverBudget.toFixed(2)}</span></td> 
