@@ -1,0 +1,13 @@
+footer {
+    background: $bgColour;
+    width: 100%;
+    div {
+		display: flex;
+		flex-direction: column;
+		
+        p {
+            font-size: 0.8rem;
+            margin: 5px;
+        }
+    }
+}

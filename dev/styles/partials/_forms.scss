@@ -1,11 +1,8 @@
 .form-section {
     background-color: $bgColour;
-    padding: 70px;
+    padding: 88px;
     @include respond-to('large') {
         padding: 70px 10px;
-    }
-    @include respond-to('small') {
-        padding: 20px 20px;
     }
 }
 
@@ -21,6 +18,9 @@ p {
     letter-spacing: 2px;
     text-transform: uppercase;
     text-shadow: 1px 1px 1px #000;
+    @include respond-to('xx-small') {
+        font-size: 1.3rem;    
+    }
 }
 
 input,

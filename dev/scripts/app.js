@@ -11,14 +11,25 @@ const Header = () => {
         <header>
             <div className="wrapper">
                 <div className="title">
-                    <h1>Travelogged</h1>
+                    <h1>Travelog</h1>
                     <p>Budget App for Practical Nomads</p>
                 </div>
             </div>
         </header>  
     )
-}   
+}
 
+//footer    
+const Footer = () => {
+    return (
+        <footer>
+            <div>
+                <p>Created with &#9829; by Jocelyn Lum</p> 
+                <p>Background photo by ian dooley on Unsplash</p>
+            </div>
+        </footer>  
+    )
+}
 //form to enter in individual expenses
 class Form extends React.Component {
     render() {
@@ -190,6 +201,7 @@ componentDidMount() {
               </tfoot>
         	</table>
         </section>
+       <Footer />   
       </div>
 
       )
