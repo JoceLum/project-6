@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import  { toMoney } from './utilities'
 import swal from 'sweetalert2'
-import firebase, { auth, provider } from './firebase.js';
+import firebase from './firebase.js';
 const userRef = firebase.database().ref('/user');
 
 //header
@@ -65,30 +65,10 @@ constructor() {
             totalExpenses: 0,
             leftOverBudget: 0,
             items: [],
-            user: null
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this); 
 }
-login() {
-    auth.signInWithPopup(provider)
-    .then((result) => {
-        this.setState({
-            user: result.user,
-        })
-    });
-}
-logout() {
-    auth.signOut()
-    .then(() => {
-        this.setState({
-            user: null,
-        })
-    });
-}
-
 
 removeItem(key) {
     const itemRef = firebase.database().ref(`user/items/${key}`);
@@ -144,13 +124,7 @@ handleChange(event) {
 }
 
 componentDidMount() {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({
-            user: user,
-        });
-      } 
-    });
+
     //to retrieve data from Firebase:
     userRef.on('value',(snapshot) => {
         const newItemsArray = [];
@@ -178,23 +152,7 @@ componentDidMount() {
     render() {
       return (
        <div className="app wrapper"> 
-       {this.state.user ?
-         <button className="log" onClick={this.logout}>Log Out</button>                
-         :
-         <button className="log" onClick={this.login}>Log In</button>  
-        }
         <Header />
-        {this.state.user ?
-            <div>
-              <div className='user-profile'>
-                <img src={this.state.user.photoURL} />
-              </div>
-            </div>
-            :
-            <div className='wrapper'>
-              <p>You must be logged in to see the trip expenses list and add to it.</p>
-            </div>
-          }
         <Form
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}

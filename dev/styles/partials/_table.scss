@@ -20,6 +20,9 @@ table {
         @include respond-to('small') {
             padding: 10px 30px;
         }
+        @include respond-to('xx-small') {
+            padding: 10px;
+        }
     }   
 
     th,
@@ -30,6 +33,9 @@ table {
         letter-spacing: 2px;
         @include respond-to('large') {
             font-size: 1rem;
+        }
+        @include respond-to('xx-small') {
+            font-size: 0.9rem;
         }
     }
 
@@ -43,8 +49,17 @@ table {
         background-color: $darkTanColour;
     }
 
+    td {
+        @include respond-to('xx-small') {
+            font-size: 0.8rem;
+        }
+    }
+
     td:nth-child(3) {
         padding-right: 20px;
+        @include respond-to('xx-small') {
+            padding-right: 10px;
+        }
     }
 
     tfoot span {

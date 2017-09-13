@@ -21,20 +21,3 @@ p {
     align-items: center;
     min-height: 50vh;
 }
-
-.user-profile {
-  position: fixed;
-  bottom: 20px;
-  right: 40px;
-  width: 80px;
-  height: 80px;
-  @include respond-to('large') {
-    right: 10px;
-  }
-}
-
-.user-profile img {
-  border-radius: 50%;
-  border: 1px solid #000;
-  max-width: 100%;
-}

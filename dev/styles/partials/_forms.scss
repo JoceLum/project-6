@@ -27,11 +27,17 @@ input,
 select {
     padding: 15px;
     margin: 10px;
+    width: 180px;
     outline: none;
     border-radius: 5px;
     border: 1px solid black;
     font-style: italic;
     color: $inputFontColour;
+    @include respond-to('x-small') {
+        display: block;
+        margin: 15px auto;
+        width: 300px;
+    }
 }
 
 .dropdown {
@@ -43,7 +49,10 @@ select {
         -moz-appearance: none;
         -webkit-appearance: none;
         appearance: none;
-        width: 180px;
+        background-color: #fff;
+        @include respond-to('x-small') {
+            margin-bottom: 0;
+        }
     }
 
     .fa-chevron-down {
@@ -52,6 +61,10 @@ select {
         left: 165px;
         top: 50%;
         transform: translate(-50%, -50%);
+        @include respond-to('x-small') {
+            left: 270px;  
+            top: 60%;
+        }
     }
 }
 

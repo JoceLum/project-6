@@ -17,16 +17,8 @@
         @include respond-to('large') {
             font-size: 4rem;
         }
-    }
-}
-
-.log {
-    align-self: flex-end;
-    margin: 20px 0 50px 0;
-    &:hover {
-        background-color: $btnHoverColour;
-    }
-    @include respond-to('large') {
-        margin: 20px 40px 50px 0;
+        @include respond-to('xx-small') {
+            font-size: 3rem;  
+        }
     }
 }
